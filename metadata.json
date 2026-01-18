@@ -1,0 +1,7 @@
+{
+  "name": "UIDAI Decision Intelligence System",
+  "description": "A high-fidelity decision support system for UIDAI administrators to convert anonymized Aadhaar datasets into actionable policy insights, featuring risk indicators, anomaly detection, and automated recommendations.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
