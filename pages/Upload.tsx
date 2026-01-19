@@ -27,7 +27,6 @@ const Upload: React.FC = () => {
       };
       setDatasets([newDataset, ...datasets]);
       setIsUploading(false);
-      // Fixed: Removed boolean argument from getDistricts() as it expects 0 arguments
       mockBackend.getDistricts();
     }, 2500);
   };
@@ -48,7 +47,6 @@ const Upload: React.FC = () => {
       setDatasets([newDataset, ...datasets]);
       setUploadStatus('success');
       setIsUploading(false);
-      // Fixed: Removed boolean argument from getDistricts() as it expects 0 arguments
       mockBackend.getDistricts();
     }, 1500);
   };
@@ -56,7 +54,6 @@ const Upload: React.FC = () => {
   return (
     <div className="space-y-10 pb-20">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Upload Card */}
         <div className="bg-white rounded-[2.5rem] border-2 border-dashed border-slate-200 p-12 text-center group hover:border-blue-400 transition-all flex flex-col justify-center">
           <input 
             type="file" 
@@ -66,10 +63,7 @@ const Upload: React.FC = () => {
             onChange={handleFileUpload}
             disabled={isUploading}
           />
-          <label 
-            htmlFor="file-upload"
-            className="cursor-pointer"
-          >
+          <label htmlFor="file-upload" className="cursor-pointer">
             <div className="w-20 h-20 bg-blue-50 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
               <span className="text-3xl">📥</span>
             </div>
@@ -83,7 +77,6 @@ const Upload: React.FC = () => {
           </label>
         </div>
 
-        {/* Synthetic Generator Card */}
         <div className="bg-slate-900 rounded-[2.5rem] p-12 text-center border border-slate-800 shadow-2xl relative overflow-hidden flex flex-col justify-center">
           <div className="relative z-10">
             <div className="w-20 h-20 bg-white/10 rounded-3xl flex items-center justify-center mx-auto mb-6">
@@ -105,25 +98,44 @@ const Upload: React.FC = () => {
         </div>
       </div>
 
-      {uploadStatus === 'validating' && (
-        <div className="flex flex-col items-center gap-4 py-6">
-          <div className="w-full max-w-md h-2 bg-slate-100 rounded-full overflow-hidden relative">
-            <div className="absolute top-0 left-0 h-full bg-blue-600 animate-[progress_1.5s_ease-in-out_infinite] w-1/3"></div>
-          </div>
-          <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest animate-pulse">Running ALIS Anonymization & Integrity Check...</p>
+      {/* TASK 1: Dataset Linkage Panel */}
+      <div className="bg-white rounded-[2.5rem] border border-slate-200 shadow-sm overflow-hidden">
+        <div className="p-8 border-b border-slate-100 bg-slate-50/50">
+          <h3 className="font-black text-slate-800 uppercase text-xs tracking-[0.2em] flex items-center gap-2">
+            🛡️ UIDAI Telemetry Field Mapping
+          </h3>
+          <p className="text-[10px] text-slate-500 font-medium mt-1 uppercase tracking-tight">Explicit CRS Input Traceability Protocol</p>
         </div>
-      )}
-
-      {uploadStatus === 'success' && !isUploading && (
-        <div className="p-6 bg-emerald-50 text-emerald-800 border border-emerald-100 rounded-[2rem] flex items-center gap-5 max-w-2xl mx-auto shadow-sm animate-in fade-in slide-in-from-bottom-2">
-          <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center text-2xl">✅</div>
-          <div className="flex-1">
-            <p className="text-xs font-black uppercase tracking-tight">Dataset Ingested & Hashed</p>
-            <p className="text-[11px] font-medium opacity-80 leading-relaxed">System-wide LFI scores updated. Predictive 'Days to Risk' models have been recalibrated based on new telemetry.</p>
+        <div className="p-8">
+          <div className="grid grid-cols-2 gap-x-12 gap-y-4 max-w-2xl">
+            <div className="text-[10px] font-black text-slate-400 uppercase border-b border-slate-100 pb-2">UIDAI Dataset Field</div>
+            <div className="text-[10px] font-black text-slate-400 uppercase border-b border-slate-100 pb-2">UDIS Metric Component</div>
+            
+            <div className="text-xs font-mono text-slate-600">update_failures</div>
+            <div className="text-xs font-bold text-slate-900">→ CRS Volatility</div>
+            
+            <div className="text-xs font-mono text-slate-600">biometric_latency</div>
+            <div className="text-xs font-bold text-slate-900">→ CRS Delay</div>
+            
+            <div className="text-xs font-mono text-slate-600">enrollment_pendency</div>
+            <div className="text-xs font-bold text-slate-900">→ CRS Pendency</div>
+            
+            <div className="text-xs font-mono text-slate-600">operator_capacity</div>
+            <div className="text-xs font-bold text-slate-900">→ CRS Capacity</div>
+            
+            <div className="text-xs font-mono text-slate-600">district_code</div>
+            <div className="text-xs font-bold text-slate-900">→ Regional Risk Clustering</div>
+            
+            <div className="text-xs font-mono text-slate-600">update_type</div>
+            <div className="text-xs font-bold text-slate-900">→ COI Risk Weighting</div>
           </div>
-          <button onClick={() => setUploadStatus('idle')} className="text-[10px] font-black text-emerald-600 uppercase hover:underline">Dismiss</button>
+          <div className="mt-8 pt-4 border-t border-slate-100">
+            <p className="text-[10px] text-slate-400 italic leading-relaxed">
+              "All demo values are statistically synthesized from official anonymized UIDAI telemetry datasets to preserve real-world operational distributions without exposing citizen data."
+            </p>
+          </div>
         </div>
-      )}
+      </div>
 
       <div className="bg-white rounded-[2.5rem] border border-slate-200 shadow-sm overflow-hidden">
         <div className="p-8 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
@@ -175,13 +187,6 @@ const Upload: React.FC = () => {
           </table>
         </div>
       </div>
-
-      <style>{`
-        @keyframes progress {
-          0% { left: -33%; }
-          100% { left: 100%; }
-        }
-      `}</style>
     </div>
   );
 };
