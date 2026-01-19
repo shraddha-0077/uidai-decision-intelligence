@@ -1,7 +1,42 @@
+# UIDAI Decision Intelligence System (UDIS) – 2026 Edition
 
-**Purpose:**
+> **“UIDAI DLAE is not an analytics dashboard.  
+> It is a decision-intelligence layer that converts Aadhaar operational telemetry into explainable, auditable, and privacy-safe policy actions.”**
 
-- Detect systemic friction **before citizen complaints**  
+> **“This system shifts UIDAI from reactive backlog management to pre-emptive, region-specific intervention planning.”**
+
+---
+
+## Executive Overview
+
+The **UIDAI Decision Intelligence System (UDIS)** is an **administrative-grade governance platform** developed for the **UIDAI Data Hackathon 2026**.
+
+It is designed to bridge the gap between **massive Aadhaar operational datasets** and **actionable regional governance decisions**.
+
+### What UDIS Delivers
+
+- Converts friction telemetry into:
+  - **Composite Risk Score (CRS)**
+  - **Cost of Inaction (COI)**
+  - **Predictive intervention planning**
+- Enables:
+  - Early detection of operational bottlenecks  
+  - Region-specific capacity balancing  
+  - Audit-grade policy advisories  
+
+> **UDIS is a decision-support assistant.  
+> It does not automate policy actions.  
+> It augments human judgment.**
+
+---
+
+## Core Innovation Pillars
+
+### 1. Composite Risk Score (CRS)
+
+**Purpose**
+
+- Detect systemic friction before citizen complaints  
 - Identify operational stress across regions  
 - Standardize national risk benchmarking  
 
@@ -10,7 +45,7 @@
 ### 2. Governance Reframing: Cost of Inaction (COI)
 
 - Simulates unresolved friction impact  
-- Projects backlog escalation over:
+- Projects backlog escalation over:  
   - 14-day window  
   - 30-day window  
 
@@ -25,12 +60,12 @@
 ### 3. Explainable Rule Trace (ERT)
 
 - No black-box ML  
-- Every signal includes:
+- Every signal includes:  
   - Multivariate feature justification  
   - Threshold breach logic  
   - Audit-grade traceability  
 
-**Compliance Ready:**
+**Compliance Ready**
 
 - RTI disclosure format  
 - Parliamentary oversight defensibility  
@@ -40,9 +75,11 @@
 ### 4. Predictive Resource Planning
 
 - Seasonal Load Forecast (**ARIMA-Lite**)  
-- Predicts:
-  - Enrollment volume  
-  - Update demand  
+
+**Predicts:**
+
+- Enrollment volume  
+- Update demand  
 
 **Enables:**
 
@@ -60,8 +97,10 @@
 
 - No auto-triggered policy actions  
 - Digital signature workflow  
-- Decision lifecycle:
-  - Detection → Review → Authorization → Resolution  
+
+**Decision lifecycle**
+
+- Detection → Review → Authorization → Resolution  
 
 ---
 
@@ -69,13 +108,15 @@
 
 - Hash-anchored audit trail (**ALIS-v4**)  
 - Prevents retrospective modification  
-- Guarantees 100% audit integrity for:
-  - RTI disclosures  
-  - Parliamentary oversight  
+
+**Guarantees 100% audit integrity for:**
+
+- RTI disclosures  
+- Parliamentary oversight  
 
 ---
 
-### National Impact Projection (Advisory)
+## National Impact Projection (Advisory)
 
 > **“Applying DLAE recommendations this quarter results in:**  
 > • **21% reduction in update backlog**  
@@ -100,7 +141,7 @@
 ### Decision Support vs Automation
 
 - UDIS does not automate policy  
-- Provides:
+- Provides:  
   - Composite Risk Score (CRS)  
   - Cost of Inaction (COI)  
 
@@ -168,3 +209,5 @@
 - Human-authorized policy workflow  
 - Privacy-first system design  
 - National-scale operational readiness  
+
+---
