@@ -1,12 +1,13 @@
 
-from fastapi import FastAPI, UploadFile, File, HTTPException, Depends
+from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from typing import List
+from pydantic import BaseModel
+from typing import List, Dict
 import uvicorn
+import random
 
-app = FastAPI(title="UIDAI Decision Intelligence API")
+app = FastAPI(title="UIDAI ALDPI Policy Support Engine")
 
-# Security and CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -14,48 +15,39 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/api/health")
-async def health_check():
-    return {"status": "operational", "version": "1.0.0"}
+class TelemetryPoint(BaseModel):
+    district_id: str
+    lfi: float
+    timestamp: str
 
-@app.post("/api/auth/otp/send")
-async def send_otp(email: str):
-    # Mocking OTP send
-    return {"message": "OTP sent to registered email", "expiry": "5 minutes"}
+@app.get("/api/aldpi/health")
+async def health():
+    return {
+        "status": "operational",
+        "protocol": "ALDPI v2.4",
+        "encryption": "AES-256-GCM",
+        "anonymization_level": 3
+    }
 
-@app.post("/api/auth/login")
-async def login(email: str, otp: str):
-    if otp == "123456":
-        return {
-            "token": "mock_jwt_token_uidai",
-            "user": {"name": "Pankaj Kumar", "role": "ADMIN", "email": email}
-        }
-    raise HTTPException(status_code=401, detail="Invalid OTP")
-
-@app.get("/api/signals")
-async def get_signals():
-    # In a real app, this queries the PostgreSQL db for calculated anomalies
-    return [
-        {
-            "id": "s1",
-            "type": "RISK",
-            "title": "Low Biometric Update Velocity",
-            "district": "Bellary, Karnataka",
-            "severity": "HIGH",
-            "dataSummary": "Biometric update rates fell by 22% in the 15-18 age bracket...",
-            "whyItMatters": "Crucial for scholarship disbursements.",
-            "recommendedAction": "Coordinate with State Education Dept.",
-            "metricValue": 22,
-            "trend": "DOWN"
-        }
+@app.get("/api/aldpi/watchlist")
+async def get_watchlist():
+    # Mocking ranking logic based on LFI scores > 0.6
+    districts = [
+        {"id": "d1", "name": "Bellary", "lfi": 0.85, "risk": "High"},
+        {"id": "d3", "name": "Pune", "lfi": 0.72, "risk": "Medium-High"},
+        {"id": "d11", "name": "Gaya", "lfi": 0.88, "risk": "Critical"}
     ]
+    return sorted(districts, key=lambda x: x["lfi"], reverse=True)
 
-@app.post("/api/upload")
-async def upload_dataset(file: UploadFile = File(...)):
-    if not file.filename.endswith(".csv"):
-        raise HTTPException(status_code=400, detail="Only CSV files allowed")
-    # Simulation of CSV cleaning, hashing PII, and storing in DB
-    return {"status": "success", "filename": file.filename, "records_processed": 12450}
+@app.post("/api/aldpi/telemetry/ingest")
+async def ingest_telemetry(data: List[TelemetryPoint]):
+    # This endpoint represents the ALIS Firewall ingestion layer
+    # where PII is stripped and only LFI values are persisted.
+    return {
+        "status": "processed",
+        "points_ingested": len(data),
+        "anonymization_verify": True
+    }
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

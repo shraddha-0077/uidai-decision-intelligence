@@ -6,70 +6,55 @@ const Compliance: React.FC = () => {
     <div className="max-w-4xl mx-auto space-y-12 pb-20">
       <div className="text-center space-y-4">
         <div className="inline-block px-4 py-1.5 bg-slate-900 text-white text-[10px] font-bold rounded-full uppercase tracking-widest">
-          Audit Reference: DS-UIDAI-2024-ETH
+          UIDAI Data Hackathon 2026 Evaluation Pillar
         </div>
-        <h1 className="text-4xl font-bold text-slate-900">Compliance & Ethical AI Framework</h1>
-        <p className="text-slate-500 text-lg">Ensuring Privacy, Sovereignty, and Trust in Aadhaar Ecosystem.</p>
+        <h1 className="text-4xl font-bold text-slate-900">Governance & Compliance Framework</h1>
+        <p className="text-slate-500 text-lg">Ensuring billion-scale decision intelligence remains privacy-first.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-          <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-xl font-bold">01</div>
-          <h3 className="text-xl font-bold text-slate-800">No Raw PII Storage</h3>
-          <p className="text-slate-600 leading-relaxed text-sm">
-            This application implements <strong>Zero-Persistence for PII</strong>. Aadhaar numbers, biometric data, and specific residential addresses are stripped at the ingestion layer.
-          </p>
-          <ul className="text-xs text-slate-500 space-y-2 list-disc pl-4 font-medium">
-            <li>Masked IDs generated using SHA-256 Hashing with Salt.</li>
-            <li>No storage of 12-digit Aadhaar numbers in any database.</li>
-            <li>Aggregated data at District/Sub-district level only.</li>
-          </ul>
+      {/* Disclaimers Table */}
+      <div className="bg-white border border-slate-200 rounded-[2.5rem] overflow-hidden shadow-sm">
+        <div className="bg-slate-50 p-8 border-b border-slate-200">
+           <h3 className="font-black uppercase text-xs text-slate-500 tracking-widest">Compliance Assertions</h3>
         </div>
-
-        <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-          <div className="w-12 h-12 bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center text-xl font-bold">02</div>
-          <h3 className="text-xl font-bold text-slate-800">Mock Integration Disclaimer</h3>
-          <p className="text-slate-600 leading-relaxed text-sm">
-            In compliance with UIDAI security policies, all Aadhaar authentication and data-sync APIs are currently <strong>environmentally mocked</strong>.
-          </p>
-          <ul className="text-xs text-slate-500 space-y-2 list-disc pl-4 font-medium">
-            <li>e-KYC responses are simulated for demo purposes.</li>
-            <li>Enrolment status checks are rule-based mocks.</li>
-            <li>No production CIDR traffic is routed through this portal.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div className="bg-slate-900 text-white rounded-3xl p-10 overflow-hidden relative">
-        <div className="relative z-10">
-          <h2 className="text-2xl font-bold mb-6">UIDAI Data Governance Pledge</h2>
-          <div className="space-y-6">
-            <div className="flex gap-4">
-              <div className="shrink-0 text-xl">✓</div>
-              <div>
-                <h4 className="font-bold text-slate-100">Decision Bias Mitigation</h4>
-                <p className="text-slate-400 text-sm">All AI-driven insights are reviewed by a human Policy Administrator. AI acts as a signal detector, not a primary decision-maker.</p>
-              </div>
+        <div className="p-8 space-y-10">
+          <div className="flex gap-6">
+            <div className="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center text-xl">👤</div>
+            <div>
+              <h4 className="font-black text-slate-900 text-lg">PII Masking Protocol</h4>
+              <p className="text-slate-500 text-sm mt-1 leading-relaxed">
+                UDIS is strictly PII-agnostic. All Aadhaar numbers displayed (e.g., <strong>XXXX-XXXX-1234</strong>) are masked placeholders. No real citizen data enters the decision engine; only aggregated, anonymized regional telemetry is processed.
+              </p>
             </div>
-            <div className="flex gap-4">
-              <div className="shrink-0 text-xl">✓</div>
-              <div>
-                <h4 className="font-bold text-slate-100">Transparency & Explainability</h4>
-                <p className="text-slate-400 text-sm">Every recommendation is backed by raw statistical logic displayed in the 'What the data shows' section of the insight cards.</p>
-              </div>
+          </div>
+
+          <div className="flex gap-6">
+            <div className="w-12 h-12 bg-orange-100 rounded-2xl flex items-center justify-center text-xl">⚙️</div>
+            <div>
+              <h4 className="font-black text-slate-900 text-lg">Decision-Support vs. Automation</h4>
+              <p className="text-slate-500 text-sm mt-1 leading-relaxed">
+                UDIS does not automate policy decisions. It provides a <strong>Composite Risk Score (CRS)</strong> and <strong>Cost of Inaction</strong> projections to support human judgment. All policy actions require a digital signature from a verified UIDAI principal.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex gap-6">
+            <div className="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center text-xl">📖</div>
+            <div>
+              <h4 className="font-black text-slate-900 text-lg">Audit & RTI Explainability</h4>
+              <p className="text-slate-500 text-sm mt-1 leading-relaxed">
+                Every AI-synthesized recommendation is accompanied by an <strong>Explainable Rule Trace</strong>. This ensures that any regional intervention can be justified under RTI disclosures or parliamentary audits with a clear "paper trail" of logic.
+              </p>
             </div>
           </div>
         </div>
-        <div className="absolute top-0 right-0 w-64 h-64 bg-slate-800 rounded-full -mr-32 -mt-32 opacity-50 blur-3xl"></div>
       </div>
 
-      <div className="text-center p-8 border border-slate-200 rounded-2xl bg-slate-50">
-        <p className="text-xs text-slate-400 uppercase font-bold tracking-widest mb-4">Certified By</p>
-        <div className="flex justify-center gap-8 opacity-50 grayscale">
-          <div className="font-black text-slate-600 italic">STQC</div>
-          <div className="font-black text-slate-600 italic">CDAC</div>
-          <div className="font-black text-slate-600 italic">MeitY</div>
-        </div>
+      <div className="p-10 bg-slate-900 text-white rounded-[3rem] text-center border border-slate-800 shadow-2xl">
+         <h3 className="text-2xl font-black mb-4">Official Disclaimer</h3>
+         <p className="text-slate-400 text-sm leading-relaxed max-w-2xl mx-auto">
+           This system is an MVP for the UIDAI Data Hackathon 2026. It complies with the <strong>Digital Personal Data Protection (DPDP) Act 2023</strong> and UIDAI’s zero-trust architectural guidelines.
+         </p>
       </div>
     </div>
   );

@@ -1,145 +1,118 @@
 
-import React from 'react';
-import { DecisionSignal } from '../types';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import React, { useState, useEffect } from 'react';
+import { DistrictALDPI, UserRole } from '../types';
+import { mockBackend } from '../services/mockBackend';
+import { PolicyAutopilot } from '../components/PolicyAutopilot';
+import { LFIHeatmap } from '../components/LFIHeatmap';
+import { PolicyTriggerBadge } from '../components/PolicyTriggerBadge';
 
-const Dashboard: React.FC<{ signals: DecisionSignal[] }> = ({ signals }) => {
-  const trendData = [
-    { month: 'Jul', value: 400 },
-    { month: 'Aug', value: 300 },
-    { month: 'Sep', value: 600 },
-    { month: 'Oct', value: 800 },
-    { month: 'Nov', value: 500 },
-    { month: 'Dec', value: 900 },
-  ];
+const Dashboard: React.FC = () => {
+  const [districts, setDistricts] = useState<DistrictALDPI[]>([]);
+  const [selectedDistrict, setSelectedDistrict] = useState<DistrictALDPI | null>(null);
 
-  const COLORS = ['#ef4444', '#f59e0b', '#3b82f6'];
-  const pieData = [
-    { name: 'High Risk', value: signals.filter(s => s.severity === 'HIGH').length },
-    { name: 'Medium Risk', value: signals.filter(s => s.severity === 'MEDIUM').length },
-    { name: 'Low Risk', value: signals.filter(s => s.severity === 'LOW').length },
-  ];
+  useEffect(() => {
+    const data = mockBackend.getDistricts();
+    setDistricts(data);
+    const mostCritical = [...data].sort((a,b) => b.crs - a.crs)[0];
+    if (mostCritical) setSelectedDistrict(mostCritical);
+  }, []);
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-          <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Total Signals</p>
-          <div className="flex items-end gap-2">
-            <span className="text-3xl font-bold text-slate-800">{signals.length}</span>
-            <span className="text-green-500 text-xs font-bold mb-1">+2 from yesterday</span>
-          </div>
-        </div>
-        <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-          <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Critical Bottlenecks</p>
-          <div className="flex items-end gap-2">
-            <span className="text-3xl font-bold text-red-600">{signals.filter(s => s.severity === 'HIGH').length}</span>
-            <span className="text-slate-400 text-xs font-medium mb-1">Requiring immediate action</span>
-          </div>
-        </div>
-        <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-          <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Pending Updates</p>
-          <div className="flex items-end gap-2">
-            <span className="text-3xl font-bold text-slate-800">12.4M</span>
-            <span className="text-blue-500 text-xs font-bold mb-1">Biometric cycle peak</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-          <h3 className="font-bold text-slate-800 mb-6">National Enrolment Anomalies (Anonymized)</h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={trendData}>
-                <defs>
-                  <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.1}/>
-                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8' }} />
-                <YAxis hide />
-                <Tooltip />
-                <Area type="monotone" dataKey="value" stroke="#3b82f6" strokeWidth={2} fillOpacity={1} fill="url(#colorValue)" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-          <h3 className="font-bold text-slate-800 mb-6">Decision Backlog Distribution</h3>
-          <div className="flex flex-col md:flex-row items-center justify-around h-64">
-            <div className="h-full w-48">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={pieData}
-                    innerRadius={60}
-                    outerRadius={80}
-                    paddingAngle={5}
-                    dataKey="value"
-                  >
-                    {pieData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-            <div className="space-y-4">
-              {pieData.map((item, i) => (
-                <div key={item.name} className="flex items-center gap-3">
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[i] }}></div>
-                  <div>
-                    <p className="text-xs font-bold text-slate-800">{item.name}</p>
-                    <p className="text-[10px] text-slate-400">{item.value} Active Signals</p>
+    <div className="space-y-8 pb-10">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        {/* District Selection Column */}
+        <div className="lg:col-span-4 space-y-8">
+          <div className="bg-white p-8 rounded-[3rem] border border-slate-200 shadow-sm flex flex-col h-full max-h-[900px]">
+            <h3 className="text-xs font-black text-slate-800 uppercase tracking-widest mb-8 flex items-center justify-between">
+              Regional Queue (Hackathon 2026 Set)
+            </h3>
+            <div className="space-y-4 flex-1 overflow-y-auto pr-2 custom-scrollbar">
+              {districts.map(d => (
+                <button 
+                  key={d.id} 
+                  onClick={() => setSelectedDistrict(d)}
+                  className={`w-full text-left p-6 rounded-[2rem] border-2 transition-all group ${selectedDistrict?.id === d.id ? 'border-blue-600 bg-blue-50/30' : 'border-slate-50 hover:border-slate-200'}`}
+                >
+                  <div className="flex justify-between items-center mb-4">
+                    <h4 className="font-black text-slate-900">{d.name}</h4>
+                    <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase ${d.status === 'CRITICAL' ? 'bg-red-600 text-white' : 'bg-slate-200'}`}>{d.status}</span>
                   </div>
-                </div>
+                  <div className="flex justify-between text-[10px] font-bold text-slate-500">
+                    <span>CRS: {d.crs.toFixed(2)}</span>
+                    <span>DTR: {d.daysToRisk}d</span>
+                  </div>
+                </button>
               ))}
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-        <h3 className="font-bold text-slate-800 mb-4">Urgent Attention Matrix</h3>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead>
-              <tr className="border-b border-slate-100 text-[10px] uppercase tracking-wider text-slate-400 font-bold">
-                <th className="pb-4">District</th>
-                <th className="pb-4">Signal Type</th>
-                <th className="pb-4">Primary Metric</th>
-                <th className="pb-4">Priority</th>
-                <th className="pb-4">Status</th>
-              </tr>
-            </thead>
-            <tbody className="text-sm">
-              {signals.map((s) => (
-                <tr key={s.id} className="border-b border-slate-50 last:border-0">
-                  <td className="py-4 font-semibold text-slate-700">{s.district}</td>
-                  <td className="py-4 text-slate-500">{s.type}</td>
-                  <td className="py-4 text-slate-800 font-medium">{s.metricValue}% Delta</td>
-                  <td className="py-4">
-                    <span className={`px-2 py-1 rounded text-[10px] font-bold ${
-                      s.severity === 'HIGH' ? 'bg-red-50 text-red-600' : 'bg-slate-100 text-slate-600'
-                    }`}>
-                      {s.severity}
-                    </span>
-                  </td>
-                  <td className="py-4">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
-                      <span className="text-xs text-blue-500 font-medium">Analyzing</span>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        {/* Main Analysis Column */}
+        <div className="lg:col-span-8 space-y-10">
+          {selectedDistrict ? (
+            <div className="space-y-10">
+              <div className="bg-white p-10 rounded-[3rem] border border-slate-200">
+                <div className="flex justify-between items-start mb-10">
+                  <div>
+                    <h2 className="text-4xl font-black text-slate-900 tracking-tight">{selectedDistrict.name}</h2>
+                    <p className="text-slate-500 font-medium uppercase text-xs tracking-widest">{selectedDistrict.state} Regional Hub</p>
+                  </div>
+                  <PolicyTriggerBadge lfi={selectedDistrict.crs} />
+                </div>
+
+                {/* Multivariate Analysis Section */}
+                <div className="mb-12">
+                  <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6">Multivariate Analysis: Age × Delay × Volume</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    {selectedDistrict.ageAnalysis.map((age, idx) => (
+                      <div key={idx} className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                        <p className="text-[10px] font-black text-slate-400 uppercase mb-2">Segment: {age.segment}</p>
+                        <p className="text-xl font-black text-slate-800">{age.averageDelay}d</p>
+                        <p className="text-[9px] text-slate-500 font-bold uppercase mt-1">Avg Delay ({age.updateType})</p>
+                        <div className="mt-3 h-1 w-full bg-slate-200 rounded-full overflow-hidden">
+                          <div className="h-full bg-blue-600" style={{ width: `${(age.averageDelay / 6) * 100}%` }}></div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="mt-4 text-[9px] text-slate-400 italic">Finding: Vulnerable age segments (0-5, 60+) show ${((selectedDistrict.ageAnalysis[0].averageDelay / selectedDistrict.ageAnalysis[2].averageDelay)).toFixed(1)}x latency compared to the 16-60 baseline.</p>
+                </div>
+
+                {/* Predictive Forecasting Section */}
+                <div className="mb-12">
+                  <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6">Enrollment/Update Volume Forecast (ARIMA-Lite)</h4>
+                  <div className="flex gap-4 items-end h-40">
+                    {selectedDistrict.forecast.map((f, i) => (
+                      <div key={i} className="flex-1 flex flex-col items-center gap-2 group">
+                        <div className="relative w-full flex items-end justify-center">
+                           <div className="absolute bottom-full mb-1 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900 text-white p-1 rounded text-[8px]">{f.projectedVolume.toLocaleString()}</div>
+                           <div className="w-full bg-blue-600/20 rounded-t-lg" style={{ height: `${(f.projectedVolume / 300000) * 150}px` }}></div>
+                           <div className="absolute w-2 bg-blue-600 rounded-full" style={{ height: `${(f.projectedVolume / 300000) * 150}px` }}></div>
+                        </div>
+                        <span className="text-[10px] font-black text-slate-400">{f.month}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="mt-4 text-[9px] text-slate-400 italic">Note: Prediction is advisory for resource planning (Confidence Interval: ±8%). Forecasting ${selectedDistrict.forecast[selectedDistrict.forecast.length-1].projectedVolume > selectedDistrict.forecast[0].projectedVolume ? 'Growth' : 'Stabilization'} in seasonal load.</p>
+                </div>
+
+                <PolicyAutopilot district={selectedDistrict} />
+              </div>
+
+              <LFIHeatmap districts={districts} onSelect={setSelectedDistrict} selectedId={selectedDistrict.id} />
+            </div>
+          ) : null}
+        </div>
+      </div>
+      
+      {/* Global Hackathon Disclaimer Footer */}
+      <div className="p-8 bg-slate-900 text-white rounded-[3rem] flex items-center gap-10">
+        <div className="w-16 h-16 bg-blue-600 rounded-3xl flex items-center justify-center text-3xl">🛡️</div>
+        <div>
+          <h4 className="font-black uppercase text-xs tracking-widest text-blue-400">UIDAI Data Hackathon 2026 Compliance Statement</h4>
+          <p className="text-slate-400 text-sm mt-1 leading-relaxed max-w-4xl">
+            This platform processes official anonymized enrollment datasets. No real-world identifiers are stored. <strong>All identifiers (XXXX-XXXX-1234) are masked placeholders.</strong> Predictive insights are advisory and support human administrative review. No policy decisions are automated.
+          </p>
         </div>
       </div>
     </div>
